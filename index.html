@@ -465,6 +465,10 @@
             padding: 5mm;
         }
 
+        .phase2-card.full-width {
+            grid-column: span 2;
+        }
+
         .phase2-card-header {
             display: flex;
             align-items: center;
@@ -488,11 +492,23 @@
         .phase2-card-icon.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
         .phase2-card-icon.green { background: linear-gradient(135deg, #10b981, #059669); }
         .phase2-card-icon.pink { background: linear-gradient(135deg, #ec4899, #db2777); }
+        .phase2-card-icon.orange { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .phase2-card-icon.gray { background: linear-gradient(135deg, #64748b, #475569); }
 
         .phase2-card-title {
             font-size: 11pt;
             font-weight: 600;
             color: #1a1a2e;
+        }
+
+        .phase2-card-subtitle {
+            font-size: 8pt;
+            color: #10b981;
+            font-weight: 500;
+        }
+
+        .phase2-card-subtitle.paid {
+            color: #f59e0b;
         }
 
         .phase2-card-list {
@@ -512,6 +528,16 @@
             content: '•';
             color: #6366f1;
             font-weight: bold;
+        }
+
+        .phase2-card-list li.removed::before {
+            content: '−';
+            color: #ef4444;
+        }
+
+        .phase2-card-list li.added::before {
+            content: '+';
+            color: #10b981;
         }
 
         /* Complexity Table */
@@ -557,6 +583,8 @@
         .badge.high { background: #fee2e2; color: #dc2626; }
         .badge.medium { background: #fef3c7; color: #d97706; }
         .badge.low { background: #d1fae5; color: #059669; }
+        .badge.free { background: #d1fae5; color: #059669; }
+        .badge.paid { background: #fef3c7; color: #d97706; }
 
         /* Quote Section */
         .quote-box {
@@ -775,6 +803,19 @@
             margin: 0;
         }
 
+        .note-box.info {
+            background: #eff6ff;
+            border-color: #93c5fd;
+        }
+
+        .note-box.info .note-box-title {
+            color: #1e40af;
+        }
+
+        .note-box.info p {
+            color: #1d4ed8;
+        }
+
         /* Signature Section */
         .signature-section {
             margin-top: 15mm;
@@ -838,6 +879,41 @@
             color: #64748b;
             margin-top: 1mm;
         }
+
+        /* Optional Section */
+        .optional-section {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 1px dashed #38bdf8;
+            border-radius: 10px;
+            padding: 5mm;
+            margin: 5mm 0;
+        }
+
+        .optional-title {
+            font-size: 10pt;
+            font-weight: 600;
+            color: #0369a1;
+            margin-bottom: 3mm;
+        }
+
+        .optional-list {
+            list-style: none;
+            font-size: 9pt;
+        }
+
+        .optional-list li {
+            padding: 2mm 0;
+            color: #0c4a6e;
+            display: flex;
+            align-items: flex-start;
+            gap: 2mm;
+        }
+
+        .optional-list li::before {
+            content: '?';
+            color: #0ea5e9;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -879,7 +955,7 @@
         </div>
 
         <h1>Executive Summary</h1>
-        <p class="lead">This document presents our comprehensive analysis of the Scout platform's current architecture (Phase 1) and outlines the development scope for Phase 2, which introduces Business Profiles, Artist/Performer Profiles, and Ticketed Events with integrated payment processing.</p>
+        <p class="lead">This document presents our comprehensive analysis of the Scout platform's current architecture (Phase 1) and outlines the development scope for Phase 2, which introduces Business Profiles, Artist Profiles, Dynamic Events, and enhanced social features.</p>
 
         <p>Following a thorough code review of the existing repositories (scout-app, scout-server, scout-server-init), we have mapped the complete system architecture and identified the integration points, database modifications, and new feature development required for Phase 2.</p>
 
@@ -902,9 +978,28 @@
             </div>
         </div>
 
-        <h2>Phase 1: System Architecture</h2>
+        <h2>Phase 2 Overview</h2>
+        <p>Phase 2 builds upon the existing Personal Profile and Core Event foundation to introduce a tiered profile and event system:</p>
 
-        <p>The Scout platform is a cross-platform event discovery and social networking application built with modern technologies and a scalable architecture.</p>
+        <div class="feature-grid">
+            <div class="feature-block">
+                <h4>Profile Types</h4>
+                <ul>
+                    <li><strong>Personal Profile</strong> - Enhanced with connections view, past events, and view toggles</li>
+                    <li><strong>Artist Profile</strong> - Free tier for musicians, DJs, performers with social/music links</li>
+                    <li><strong>Business Profile</strong> - Paid subscription for venues, vendors, freelancers, organizers</li>
+                </ul>
+            </div>
+            <div class="feature-block">
+                <h4>Event Types</h4>
+                <ul>
+                    <li><strong>Core Event</strong> - Simplified free events (removing activities, age restrictions, ticket link)</li>
+                    <li><strong>Dynamic Event</strong> - Premium events with lineups, itineraries, linked profiles, and spaces</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>Phase 1: System Architecture</h2>
 
         <div class="architecture-diagram">
             <div class="arch-group">
@@ -941,17 +1036,17 @@
                     <div class="arch-box warning">
                         <div class="arch-box-icon">☁️</div>
                         <div class="arch-box-label">Cloudflare</div>
-                        <div class="arch-box-sub">CDN + SSL + DDoS</div>
+                        <div class="arch-box-sub">CDN + SSL</div>
                     </div>
                     <div class="arch-box warning">
                         <div class="arch-box-icon">🚀</div>
                         <div class="arch-box-label">Express.js</div>
-                        <div class="arch-box-sub">REST API :1000</div>
+                        <div class="arch-box-sub">REST API</div>
                     </div>
                     <div class="arch-box warning">
                         <div class="arch-box-icon">⚡</div>
                         <div class="arch-box-label">Socket.IO</div>
-                        <div class="arch-box-sub">Real-time :1001</div>
+                        <div class="arch-box-sub">Real-time</div>
                     </div>
                 </div>
             </div>
@@ -962,7 +1057,7 @@
                 <div class="arch-box success">
                     <div class="arch-box-icon">🐘</div>
                     <div class="arch-box-label">PostgreSQL</div>
-                    <div class="arch-box-sub">Supabase Hosted</div>
+                    <div class="arch-box-sub">Supabase</div>
                 </div>
                 <div class="arch-box pink">
                     <div class="arch-box-icon">🔥</div>
@@ -971,8 +1066,8 @@
                 </div>
                 <div class="arch-box">
                     <div class="arch-box-icon">📁</div>
-                    <div class="arch-box-label">Supabase</div>
-                    <div class="arch-box-sub">File Storage</div>
+                    <div class="arch-box-label">Storage</div>
+                    <div class="arch-box-sub">Supabase</div>
                 </div>
                 <div class="arch-box">
                     <div class="arch-box-icon">🗺️</div>
@@ -1131,89 +1226,7 @@
             <div class="page-header-right">Linked Impact</div>
         </div>
 
-        <h1>Phase 1: API Structure</h1>
-        <p class="lead">The backend exposes a RESTful API at <strong>api.scoutevents.co.za/api/v1</strong> with the following module structure:</p>
-
-        <div class="api-section">
-            <h3>Authentication Module</h3>
-            <table class="api-table">
-                <thead>
-                    <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td class="method post">POST</td><td class="endpoint">/auth/sign-up</td><td>User registration with email verification</td></tr>
-                    <tr><td class="method post">POST</td><td class="endpoint">/auth/sign-in</td><td>User login with credentials</td></tr>
-                    <tr><td class="method post">POST</td><td class="endpoint">/auth/verify-account</td><td>OTP verification for new accounts</td></tr>
-                    <tr><td class="method post">POST</td><td class="endpoint">/auth/forget-password</td><td>Initiate password reset flow</td></tr>
-                    <tr><td class="method post">POST</td><td class="endpoint">/auth/reset-password</td><td>Complete password reset with OTP</td></tr>
-                    <tr><td class="method post">POST</td><td class="endpoint">/social/verify</td><td>Google OAuth token verification</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="api-section">
-            <h3>User Module</h3>
-            <table class="api-table">
-                <thead>
-                    <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td class="method get">GET</td><td class="endpoint">/user/profile</td><td>Get authenticated user's profile</td></tr>
-                    <tr><td class="method patch">PATCH</td><td class="endpoint">/user/profile</td><td>Update profile information</td></tr>
-                    <tr><td class="method get">GET</td><td class="endpoint">/user/:userId</td><td>Get public profile of another user</td></tr>
-                    <tr><td class="method get">GET</td><td class="endpoint">/user/nearby-users</td><td>Get users near current location</td></tr>
-                    <tr><td class="method post">POST</td><td class="endpoint">/user/block/:userId</td><td>Block a user</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="api-section">
-            <h3>Event Module</h3>
-            <table class="api-table">
-                <thead>
-                    <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td class="method post">POST</td><td class="endpoint">/event/create</td><td>Create a new event</td></tr>
-                    <tr><td class="method get">GET</td><td class="endpoint">/event/for-you</td><td>Personalized event feed</td></tr>
-                    <tr><td class="method get">GET</td><td class="endpoint">/event/friends-events</td><td>Events from followed users</td></tr>
-                    <tr><td class="method get">GET</td><td class="endpoint">/event/today</td><td>Events happening today</td></tr>
-                    <tr><td class="method get">GET</td><td class="endpoint">/event/nearby-events</td><td>Location-based event search</td></tr>
-                    <tr><td class="method get">GET</td><td class="endpoint">/event/:eventId</td><td>Get event details</td></tr>
-                    <tr><td class="method post">POST</td><td class="endpoint">/event/add-interest/:id</td><td>Mark interest in event</td></tr>
-                    <tr><td class="method delete">DELETE</td><td class="endpoint">/event/:eventId</td><td>Delete an event</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="api-section">
-            <h3>Social Module</h3>
-            <table class="api-table">
-                <thead>
-                    <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
-                </thead>
-                <tbody>
-                    <tr><td class="method post">POST</td><td class="endpoint">/connection/follow-user/:id</td><td>Follow a user</td></tr>
-                    <tr><td class="method post">POST</td><td class="endpoint">/connection/send-request/:id</td><td>Send connection request</td></tr>
-                    <tr><td class="method post">POST</td><td class="endpoint">/connection/accept/:id</td><td>Accept connection request</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="page-footer">
-            <span>Confidential - Linked Impact (Pty) Ltd</span>
-            <span>Page 4 of 8</span>
-        </div>
-    </div>
-
-    <!-- Page 5: Current Features Detail -->
-    <div class="page">
-        <div class="page-header">
-            <div class="page-header-left">Scout Platform - Phase 2 Proposal</div>
-            <div class="page-header-right">Linked Impact</div>
-        </div>
-
-        <h1>Phase 1: Feature Summary</h1>
+        <h1>Phase 1: Current Features</h1>
         <p class="lead">A comprehensive overview of all implemented functionality in the current production system.</p>
 
         <div class="feature-grid">
@@ -1231,7 +1244,7 @@
             </div>
 
             <div class="feature-block">
-                <h4>👤 User Profiles</h4>
+                <h4>👤 Personal Profiles</h4>
                 <ul>
                     <li>Profile photo upload</li>
                     <li>Bio and personal details</li>
@@ -1244,14 +1257,14 @@
             </div>
 
             <div class="feature-block">
-                <h4>🎉 Event Management</h4>
+                <h4>🎉 Core Events</h4>
                 <ul>
                     <li>Multi-step event creation</li>
                     <li>Category & tag assignment</li>
                     <li>Location with map integration</li>
                     <li>Date, time & duration</li>
-                    <li>Age restrictions</li>
-                    <li>Event activities/schedule</li>
+                    <li>Age restrictions (to be removed)</li>
+                    <li>Event activities/schedule (to be moved)</li>
                     <li>Visibility controls</li>
                     <li>Event sharing (AppsFlyer)</li>
                 </ul>
@@ -1297,17 +1310,121 @@
         </div>
 
         <h2>Real-time Features (Socket.IO)</h2>
-        <p>The platform includes WebSocket infrastructure for real-time functionality:</p>
         <ul class="feature-list">
             <li>Online user presence tracking</li>
             <li>Active users list with live updates</li>
             <li>JWT-authenticated socket connections</li>
-            <li>Room-based messaging infrastructure (scaffolded for Phase 2)</li>
+            <li>Room-based messaging infrastructure (scaffolded for future phases)</li>
         </ul>
 
-        <div class="note-box">
-            <div class="note-box-title">Observation: Chat System Ready</div>
-            <p>The codebase contains commented-out chat functionality, indicating the infrastructure for direct messaging is already scaffolded and can be activated in future phases.</p>
+        <div class="page-footer">
+            <span>Confidential - Linked Impact (Pty) Ltd</span>
+            <span>Page 4 of 8</span>
+        </div>
+    </div>
+
+    <!-- Page 5: Phase 2 - Core Event & Personal Profile Updates -->
+    <div class="page">
+        <div class="page-header">
+            <div class="page-header-left">Scout Platform - Phase 2 Proposal</div>
+            <div class="page-header-right">Linked Impact</div>
+        </div>
+
+        <h1>Phase 2: Updates to Existing Features</h1>
+        <p class="lead">Phase 2 refines the existing Core Event and Personal Profile to create a cleaner foundation for the new profile and event types.</p>
+
+        <div class="phase2-grid">
+            <div class="phase2-card">
+                <div class="phase2-card-header">
+                    <div class="phase2-card-icon gray">🎉</div>
+                    <div>
+                        <div class="phase2-card-title">Core Event Updates</div>
+                        <div class="phase2-card-subtitle">Simplified Free Events</div>
+                    </div>
+                </div>
+                <ul class="phase2-card-list">
+                    <li class="removed">Remove ticket link functionality</li>
+                    <li class="removed">Remove activities/schedule section</li>
+                    <li class="removed">Remove age restrictions</li>
+                    <li class="removed">Remove extra section</li>
+                    <li>Retain all other core event features</li>
+                    <li>Keep category, tags, location, date/time</li>
+                    <li>Maintain event sharing and visibility controls</li>
+                </ul>
+            </div>
+
+            <div class="phase2-card">
+                <div class="phase2-card-header">
+                    <div class="phase2-card-icon blue">👤</div>
+                    <div>
+                        <div class="phase2-card-title">Personal Profile Updates</div>
+                        <div class="phase2-card-subtitle">Enhanced Social Features</div>
+                    </div>
+                </div>
+                <ul class="phase2-card-list">
+                    <li class="added">Connection and friend counts display</li>
+                    <li class="added">List view for all connections/friends</li>
+                    <li class="added">Search through connections</li>
+                    <li class="added">Past events attended view</li>
+                    <li class="added">Toggle between card/grid event views</li>
+                    <li>Personal profiles keep "connections" model</li>
+                    <li>Retain all existing profile features</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>Phase 2: New Profile Types</h2>
+        <p class="lead">Two new profile types expand the platform for different user segments.</p>
+
+        <div class="phase2-grid">
+            <div class="phase2-card">
+                <div class="phase2-card-header">
+                    <div class="phase2-card-icon purple">🎤</div>
+                    <div>
+                        <div class="phase2-card-title">Artist Profile</div>
+                        <div class="phase2-card-subtitle">Free Tier</div>
+                    </div>
+                </div>
+                <ul class="phase2-card-list">
+                    <li>Everything from Personal Profile</li>
+                    <li>Social links (Instagram, Twitter, etc.)</li>
+                    <li>Music links (Spotify, SoundCloud, Apple Music)</li>
+                    <li>Title/designation (DJ, Band, Solo Artist, etc.)</li>
+                    <li>Scoutables to describe the artist</li>
+                    <li>Followers instead of connections</li>
+                    <li>Can be linked to Dynamic Events</li>
+                </ul>
+                <div style="margin-top: 3mm; padding-top: 3mm; border-top: 1px dashed #e2e8f0;">
+                    <p style="font-size: 8pt; color: #64748b; margin: 0;">
+                        <strong>Target Users:</strong> Musicians, DJs, bands, performers. Free to encourage artists as "influencers" who bring audiences to the platform.
+                    </p>
+                </div>
+            </div>
+
+            <div class="phase2-card">
+                <div class="phase2-card-header">
+                    <div class="phase2-card-icon orange">🏢</div>
+                    <div>
+                        <div class="phase2-card-title">Business Profile</div>
+                        <div class="phase2-card-subtitle paid">Paid Subscription</div>
+                    </div>
+                </div>
+                <ul class="phase2-card-list">
+                    <li>Everything from Personal Profile</li>
+                    <li>Followers instead of connections</li>
+                    <li>Business location (address, map pin)</li>
+                    <li>Website URL</li>
+                    <li>Entry prices (for venues)</li>
+                    <li>Contact information</li>
+                    <li>Includes 4 Dynamic Events per subscription</li>
+                    <li>Can be linked to other's Dynamic Events</li>
+                </ul>
+                <div style="margin-top: 3mm; padding-top: 3mm; border-top: 1px dashed #e2e8f0;">
+                    <p style="font-size: 8pt; color: #64748b; margin: 0;">
+                        <strong>Target Users:</strong> Venues (bars, clubs, restaurants), freelancers (photographers, videographers), vendors (security, catering), brands, event organizers.
+                    </p>
+                </div>
+            </div>
         </div>
 
         <div class="page-footer">
@@ -1316,135 +1433,94 @@
         </div>
     </div>
 
-    <!-- Page 6: Phase 2 Scope -->
+    <!-- Page 6: Phase 2 - Dynamic Events -->
     <div class="page">
         <div class="page-header">
             <div class="page-header-left">Scout Platform - Phase 2 Proposal</div>
             <div class="page-header-right">Linked Impact</div>
         </div>
 
-        <h1>Phase 2: Development Scope</h1>
-        <p class="lead">Phase 2 introduces three major feature sets that significantly expand the platform's capabilities: Business Profiles, Artist/Performer Profiles, and Ticketed Events with payment processing.</p>
+        <h1>Phase 2: Dynamic Events</h1>
+        <p class="lead">Dynamic Events are the premium event type, unlocking advanced features for complex, multi-day, multi-stage events. Available to Business Profile subscribers (4 included) or as paid add-ons.</p>
 
         <div class="phase2-grid">
-            <div class="phase2-card">
+            <div class="phase2-card full-width">
                 <div class="phase2-card-header">
-                    <div class="phase2-card-icon blue">🏢</div>
-                    <div class="phase2-card-title">Business Profiles</div>
+                    <div class="phase2-card-icon green">⚡</div>
+                    <div>
+                        <div class="phase2-card-title">Dynamic Event Features</div>
+                        <div class="phase2-card-subtitle paid">Paid Event Type</div>
+                    </div>
                 </div>
-                <ul class="phase2-card-list">
-                    <li>New profile type with business-specific fields</li>
-                    <li>Business verification workflow</li>
-                    <li>Business analytics dashboard</li>
-                    <li>Multiple team member access</li>
-                    <li>Business hours & contact information</li>
-                    <li>Service/menu listings</li>
-                    <li>Customer review system</li>
-                    <li>Business-to-event linking</li>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 5mm;">
+                    <ul class="phase2-card-list">
+                        <li>Everything from Core Event</li>
+                        <li>Features removed from Core moved here (activities, age restrictions, ticket link, extra section)</li>
+                        <li>Link Business Profiles for venue</li>
+                        <li>Link Business Profiles for vendors (security, catering, sound)</li>
+                        <li>Link Artist Profiles for performers</li>
+                    </ul>
+                    <ul class="phase2-card-list">
+                        <li><strong>Dynamic Lineups/Itineraries:</strong></li>
+                        <li>Create named "Spaces" (Main Stage, VIP Tent, etc.)</li>
+                        <li>Each Space has itinerary items</li>
+                        <li>Items include: timeslot, host (linked profile), scoutables</li>
+                        <li>Supports multi-day, multi-stage events</li>
+                        <li>Perfect for festivals, conferences, weddings</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <h3>Dynamic Event Use Cases</h3>
+        <div class="feature-grid">
+            <div class="feature-block">
+                <h4>🎵 Music Festival</h4>
+                <ul>
+                    <li>Multiple stages as Spaces</li>
+                    <li>Artist profiles linked to timeslots</li>
+                    <li>Vendor profiles for food, merch</li>
+                    <li>Venue profile for location</li>
                 </ul>
             </div>
-
-            <div class="phase2-card">
-                <div class="phase2-card-header">
-                    <div class="phase2-card-icon purple">🎤</div>
-                    <div class="phase2-card-title">Artist/Performer Profiles</div>
-                </div>
-                <ul class="phase2-card-list">
-                    <li>Artist profile type with portfolio</li>
-                    <li>Performance history & upcoming shows</li>
-                    <li>Media gallery (photos, videos, audio)</li>
-                    <li>Genre/category tagging</li>
-                    <li>Booking request system</li>
-                    <li>Fan following & notifications</li>
-                    <li>Artist verification badges</li>
-                    <li>Social media integration</li>
+            <div class="feature-block">
+                <h4>🎓 Conference</h4>
+                <ul>
+                    <li>Rooms as Spaces</li>
+                    <li>Speaker profiles per session</li>
+                    <li>Sponsor business profiles</li>
+                    <li>Multi-day schedule</li>
                 </ul>
             </div>
-
-            <div class="phase2-card">
-                <div class="phase2-card-header">
-                    <div class="phase2-card-icon green">🎫</div>
-                    <div class="phase2-card-title">Ticketed Events</div>
-                </div>
-                <ul class="phase2-card-list">
-                    <li>Ticket type configuration (GA, VIP, Early Bird)</li>
-                    <li>Dynamic pricing & capacity management</li>
-                    <li>Payment gateway integration</li>
-                    <li>QR code ticket generation</li>
-                    <li>Ticket scanning & validation</li>
-                    <li>Refund processing workflow</li>
-                    <li>Sales analytics & reporting</li>
-                    <li>Attendee management</li>
+            <div class="feature-block">
+                <h4>💒 Wedding</h4>
+                <ul>
+                    <li>Areas as Spaces (ceremony, reception)</li>
+                    <li>DJ/band as Artist profile</li>
+                    <li>Caterer, photographer as vendors</li>
+                    <li>Venue as Business profile</li>
                 </ul>
             </div>
-
-            <div class="phase2-card">
-                <div class="phase2-card-header">
-                    <div class="phase2-card-icon pink">💳</div>
-                    <div class="phase2-card-title">Payment System</div>
-                </div>
-                <ul class="phase2-card-list">
-                    <li>Payment gateway integration (Stripe/PayFast)</li>
-                    <li>Secure card tokenization</li>
-                    <li>Transaction history</li>
-                    <li>Payout management for organizers</li>
-                    <li>Fee calculation & invoicing</li>
-                    <li>Multi-currency support</li>
-                    <li>Payment webhooks & reconciliation</li>
-                    <li>Financial reporting</li>
+            <div class="feature-block">
+                <h4>🏢 Corporate Event</h4>
+                <ul>
+                    <li>Meeting rooms as Spaces</li>
+                    <li>Presenter timeslots</li>
+                    <li>Catering vendor linked</li>
+                    <li>Activities throughout day</li>
                 </ul>
             </div>
         </div>
 
-        <h3>Technical Complexity Analysis</h3>
-        <table class="complexity-table">
-            <thead>
-                <tr>
-                    <th>Component</th>
-                    <th>Database Changes</th>
-                    <th>API Endpoints</th>
-                    <th>UI Screens</th>
-                    <th>Complexity</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Business Profiles</td>
-                    <td>8+ new models</td>
-                    <td>15+ endpoints</td>
-                    <td>12+ screens</td>
-                    <td><span class="badge high">High</span></td>
-                </tr>
-                <tr>
-                    <td>Artist Profiles</td>
-                    <td>6+ new models</td>
-                    <td>12+ endpoints</td>
-                    <td>10+ screens</td>
-                    <td><span class="badge high">High</span></td>
-                </tr>
-                <tr>
-                    <td>Ticketed Events</td>
-                    <td>10+ new models</td>
-                    <td>20+ endpoints</td>
-                    <td>15+ screens</td>
-                    <td><span class="badge high">High</span></td>
-                </tr>
-                <tr>
-                    <td>Payment Integration</td>
-                    <td>5+ new models</td>
-                    <td>10+ endpoints</td>
-                    <td>8+ screens</td>
-                    <td><span class="badge high">High</span></td>
-                </tr>
-                <tr>
-                    <td>Profile Type Switching</td>
-                    <td>Schema migration</td>
-                    <td>5+ endpoints</td>
-                    <td>5+ screens</td>
-                    <td><span class="badge medium">Medium</span></td>
-                </tr>
-            </tbody>
-        </table>
+        <h2>Optional Features (Time/Budget Dependent)</h2>
+        <div class="optional-section">
+            <div class="optional-title">These items may be included in Phase 2 depending on time and cost:</div>
+            <ul class="optional-list">
+                <li><strong>Interactive Map</strong> - Show Business Profile locations (mostly venues) and event locations with daily updates</li>
+                <li><strong>Event Reels</strong> - Alternative to event cards for a more engaging browsing experience</li>
+                <li><strong>In-App Tickets</strong> - Native ticketing system within the app</li>
+            </ul>
+        </div>
 
         <div class="page-footer">
             <span>Confidential - Linked Impact (Pty) Ltd</span>
@@ -1471,7 +1547,7 @@
                 <div class="timeline-content">
                     <div class="timeline-period">Weeks 1-2</div>
                     <div class="timeline-title">Architecture & Database Design</div>
-                    <div class="timeline-desc">Schema design for new profile types and ticketing system. API specification documentation. Payment gateway selection and integration planning. Development environment setup.</div>
+                    <div class="timeline-desc">Schema design for new profile types (Artist, Business) and Dynamic Events. Subscription model design. API specification documentation. Development environment setup.</div>
                 </div>
             </div>
 
@@ -1481,9 +1557,9 @@
                     <div class="timeline-line"></div>
                 </div>
                 <div class="timeline-content">
-                    <div class="timeline-period">Weeks 3-5</div>
-                    <div class="timeline-title">Business & Artist Profile Development</div>
-                    <div class="timeline-desc">Database migrations and model implementation. Backend API development for both profile types. Profile creation and management UI. Verification workflow implementation.</div>
+                    <div class="timeline-period">Weeks 3-4</div>
+                    <div class="timeline-title">Core Event & Personal Profile Updates</div>
+                    <div class="timeline-desc">Remove deprecated features from Core Events. Implement connection list view, search, and past events. Add card/grid toggle. Backend API updates.</div>
                 </div>
             </div>
 
@@ -1493,9 +1569,9 @@
                     <div class="timeline-line"></div>
                 </div>
                 <div class="timeline-content">
-                    <div class="timeline-period">Weeks 6-8</div>
-                    <div class="timeline-title">Ticketing System Development</div>
-                    <div class="timeline-desc">Ticket type configuration system. Event ticketing UI and management dashboard. QR code generation and scanning functionality. Capacity management and availability tracking.</div>
+                    <div class="timeline-period">Weeks 5-7</div>
+                    <div class="timeline-title">Artist & Business Profile Development</div>
+                    <div class="timeline-desc">Database migrations and model implementation. Profile creation flows for both types. Social/music links for Artists. Business details, location, subscription setup. Follower system for both profile types.</div>
                 </div>
             </div>
 
@@ -1505,9 +1581,9 @@
                     <div class="timeline-line"></div>
                 </div>
                 <div class="timeline-content">
-                    <div class="timeline-period">Weeks 9-10</div>
-                    <div class="timeline-title">Payment Integration</div>
-                    <div class="timeline-desc">Payment gateway integration and testing. Checkout flow implementation. Transaction management and history. Payout system for event organizers. Financial reporting dashboard.</div>
+                    <div class="timeline-period">Weeks 8-10</div>
+                    <div class="timeline-title">Dynamic Event System</div>
+                    <div class="timeline-desc">Dynamic Event creation with linked profiles. Space/Stage management system. Itinerary builder with timeslots and hosts. Profile linking for venues, vendors, artists. Multi-day event support.</div>
                 </div>
             </div>
 
@@ -1519,7 +1595,7 @@
                 <div class="timeline-content">
                     <div class="timeline-period">Weeks 11-12</div>
                     <div class="timeline-title">Testing, QA & Deployment</div>
-                    <div class="timeline-desc">Comprehensive testing across all platforms. Payment flow testing with sandbox environments. Performance optimization. Production deployment and monitoring setup. Documentation and handover.</div>
+                    <div class="timeline-desc">Comprehensive testing across all platforms. Subscription flow testing. Performance optimization. Production deployment and monitoring setup. Documentation and handover.</div>
                 </div>
             </div>
         </div>
@@ -1527,10 +1603,12 @@
         <h2>Key Deliverables</h2>
         <ul class="feature-list">
             <li>Extended database schema with migrations for seamless upgrade</li>
-            <li>Business profile module (backend + mobile app)</li>
-            <li>Artist/Performer profile module (backend + mobile app)</li>
-            <li>Complete ticketing system with QR validation</li>
-            <li>Integrated payment processing with organizer payouts</li>
+            <li>Updated Core Event module (simplified)</li>
+            <li>Enhanced Personal Profile with connections view & past events</li>
+            <li>Complete Artist Profile system (backend + mobile app)</li>
+            <li>Complete Business Profile system with subscription model</li>
+            <li>Dynamic Event system with Spaces and Itineraries</li>
+            <li>Profile linking system (event ↔ profiles)</li>
             <li>Updated API documentation</li>
             <li>Testing coverage for all new features</li>
             <li>Deployment to production environment</li>
@@ -1567,13 +1645,14 @@
             <div class="quote-scope">
                 <div class="quote-scope-title">Complete Scope Includes:</div>
                 <ul class="quote-scope-list">
-                    <li>Business Profile System (creation, verification, dashboard, analytics)</li>
-                    <li>Artist/Performer Profile System (portfolio, booking, media gallery)</li>
-                    <li>Ticketed Events Module (ticket types, capacity, QR codes, scanning)</li>
-                    <li>Payment Gateway Integration (checkout, transactions, payouts, reporting)</li>
+                    <li>Core Event simplification (remove activities, age restrictions, ticket link, extra section)</li>
+                    <li>Personal Profile enhancements (connections view, search, past events, view toggle)</li>
+                    <li>Artist Profile System (free tier - social links, music links, scoutables, followers)</li>
+                    <li>Business Profile System (paid subscription - location, website, contact, 4 dynamic events)</li>
+                    <li>Dynamic Event System (spaces, itineraries, profile linking)</li>
                     <li>Database Architecture Extension & Migrations</li>
-                    <li>Backend API Development (60+ new endpoints)</li>
-                    <li>Mobile App Development (45+ new screens across platforms)</li>
+                    <li>Backend API Development (40+ new/modified endpoints)</li>
+                    <li>Mobile App Development (35+ new/modified screens across platforms)</li>
                     <li>Testing, QA & Production Deployment</li>
                 </ul>
             </div>
@@ -1603,7 +1682,7 @@
 
         <div class="note-box">
             <div class="note-box-title">Important Note</div>
-            <p>This quote represents Phase 2 as a complete, integrated system. The features are architecturally interdependent — Business and Artist profiles require the profile type infrastructure, ticketing requires payment integration, and all components share common authentication and notification systems. Partial implementation is not available as it would compromise system integrity.</p>
+            <p>This quote represents Phase 2 as a complete, integrated system. The features are architecturally interdependent — Artist and Business profiles require the profile type infrastructure, Dynamic Events require the profile linking system, and all components share common authentication and notification systems. Partial implementation is not available as it would compromise system integrity.</p>
         </div>
 
         <h2>Acceptance</h2>
