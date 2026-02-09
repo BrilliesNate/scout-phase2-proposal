@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scout Platform - Phase 2 Development Proposal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #fff;
+            color: #1a1a2e;
+            line-height: 1.7;
+            font-size: 11pt;
+        }
+
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 20mm 25mm;
+            margin: 0 auto;
+            background: white;
+            position: relative;
+        }
+
+        @media print {
+            .page {
+                page-break-after: always;
+                margin: 0;
+                padding: 15mm 20mm;
+            }
+            .page:last-child {
+                page-break-after: avoid;
+            }
+        }
+
+        /* Cover Page */
+        .cover {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: calc(297mm - 40mm);
+        }
+
+        .cover-header {
+            text-align: right;
+            padding-bottom: 20mm;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .company-name {
+            font-size: 11pt;
+            font-weight: 600;
+            color: #1a1a2e;
+            letter-spacing: 0.05em;
+        }
+
+        .company-subtitle {
+            font-size: 9pt;
+            color: #666;
+            margin-top: 2mm;
+        }
+
+        .cover-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20mm 0;
+        }
+
+        .cover-label {
+            font-size: 9pt;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #6366f1;
+            font-weight: 600;
+            margin-bottom: 6mm;
+        }
+
+        .cover-title {
+            font-size: 32pt;
+            font-weight: 700;
+            color: #1a1a2e;
+            line-height: 1.2;
+            margin-bottom: 6mm;
+        }
+
+        .cover-subtitle {
+            font-size: 14pt;
+            color: #64748b;
+            font-weight: 400;
+        }
+
+        .cover-footer {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15mm;
+            border-top: 1px solid #e5e5e5;
+            font-size: 9pt;
+            color: #64748b;
+        }
+
+        .cover-meta {
+            line-height: 1.8;
+        }
+
+        .cover-meta strong {
+            color: #1a1a2e;
+            font-weight: 600;
+        }
+
+        /* Page Header */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 8mm;
+            margin-bottom: 10mm;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .page-header-left {
+            font-size: 9pt;
+            color: #64748b;
+        }
+
+        .page-header-right {
+            font-size: 9pt;
+            font-weight: 600;
+            color: #6366f1;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 20pt;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 8mm;
+        }
+
+        h2 {
+            font-size: 14pt;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-top: 10mm;
+            margin-bottom: 5mm;
+            padding-bottom: 3mm;
+            border-bottom: 2px solid #6366f1;
+            display: inline-block;
+        }
+
+        h3 {
+            font-size: 12pt;
+            font-weight: 600;
+            color: #334155;
+            margin-top: 8mm;
+            margin-bottom: 4mm;
+        }
+
+        p {
+            margin-bottom: 4mm;
+            color: #475569;
+        }
+
+        .lead {
+            font-size: 12pt;
+            color: #64748b;
+            margin-bottom: 8mm;
+        }
+
+        /* Architecture Diagram */
+        .architecture-diagram {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            padding: 8mm;
+            margin: 8mm 0;
+        }
+
+        .arch-row {
+            display: flex;
+            justify-content: center;
+            gap: 4mm;
+            margin-bottom: 4mm;
+        }
+
+        .arch-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .arch-box {
+            background: white;
+            border-radius: 8px;
+            padding: 4mm 6mm;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid #e2e8f0;
+            min-width: 28mm;
+        }
+
+        .arch-box.primary {
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            color: white;
+            border: none;
+        }
+
+        .arch-box.success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+        }
+
+        .arch-box.warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+            border: none;
+        }
+
+        .arch-box.pink {
+            background: linear-gradient(135deg, #ec4899, #db2777);
+            color: white;
+            border: none;
+        }
+
+        .arch-box-icon {
+            font-size: 14pt;
+            margin-bottom: 1mm;
+        }
+
+        .arch-box-label {
+            font-size: 8pt;
+            font-weight: 600;
+        }
+
+        .arch-box-sub {
+            font-size: 7pt;
+            opacity: 0.8;
+            margin-top: 1mm;
+        }
+
+        .arch-connector {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12pt;
+            margin: 2mm 0;
+        }
+
+        .arch-group {
+            background: rgba(99, 102, 241, 0.05);
+            border: 1px dashed rgba(99, 102, 241, 0.3);
+            border-radius: 10px;
+            padding: 4mm;
+            margin: 3mm 0;
+        }
+
+        .arch-group-label {
+            font-size: 8pt;
+            font-weight: 600;
+            color: #6366f1;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 3mm;
+            text-align: center;
+        }
+
+        /* Tech Stack Grid */
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4mm;
+            margin: 6mm 0;
+        }
+
+        .tech-item {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 4mm;
+            text-align: center;
+        }
+
+        .tech-item-icon {
+            font-size: 16pt;
+            margin-bottom: 2mm;
+        }
+
+        .tech-item-name {
+            font-size: 9pt;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .tech-item-detail {
+            font-size: 8pt;
+            color: #64748b;
+        }
+
+        /* Feature List */
+        .feature-list {
+            list-style: none;
+            margin: 5mm 0;
+        }
+
+        .feature-list li {
+            padding: 3mm 0 3mm 8mm;
+            position: relative;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 10pt;
+            color: #475569;
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #6366f1;
+            font-weight: 600;
+        }
+
+        /* Two Column Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6mm;
+            margin: 6mm 0;
+        }
+
+        .feature-block {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 5mm;
+            border-left: 3px solid #6366f1;
+        }
+
+        .feature-block h4 {
+            font-size: 10pt;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 3mm;
+        }
+
+        .feature-block ul {
+            list-style: none;
+            font-size: 9pt;
+        }
+
+        .feature-block ul li {
+            padding: 1.5mm 0;
+            color: #64748b;
+            display: flex;
+            align-items: flex-start;
+            gap: 2mm;
+        }
+
+        .feature-block ul li::before {
+            content: '•';
+            color: #6366f1;
+            font-weight: bold;
+        }
+
+        /* API Endpoints Table */
+        .api-section {
+            margin: 5mm 0;
+        }
+
+        .api-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 8pt;
+            margin-top: 3mm;
+        }
+
+        .api-table th {
+            background: #f1f5f9;
+            padding: 2mm 3mm;
+            text-align: left;
+            font-weight: 600;
+            color: #475569;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .api-table td {
+            padding: 2mm 3mm;
+            border-bottom: 1px solid #f1f5f9;
+            color: #64748b;
+        }
+
+        .api-table .method {
+            font-weight: 600;
+            font-family: monospace;
+            font-size: 7pt;
+        }
+
+        .api-table .method.get { color: #10b981; }
+        .api-table .method.post { color: #3b82f6; }
+        .api-table .method.patch { color: #f59e0b; }
+        .api-table .method.delete { color: #ef4444; }
+
+        .api-table .endpoint {
+            font-family: monospace;
+            font-size: 8pt;
+            color: #1a1a2e;
+        }
+
+        /* Database Schema */
+        .schema-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3mm;
+            margin: 5mm 0;
+        }
+
+        .schema-item {
+            background: linear-gradient(135deg, #f8fafc, #fff);
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 3mm;
+            text-align: center;
+        }
+
+        .schema-item-icon {
+            font-size: 12pt;
+            margin-bottom: 1mm;
+        }
+
+        .schema-item-name {
+            font-size: 8pt;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .schema-item-count {
+            font-size: 7pt;
+            color: #64748b;
+        }
+
+        /* Phase 2 Cards */
+        .phase2-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5mm;
+            margin: 6mm 0;
+        }
+
+        .phase2-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #fff 100%);
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 5mm;
+        }
+
+        .phase2-card-header {
+            display: flex;
+            align-items: center;
+            gap: 3mm;
+            margin-bottom: 4mm;
+            padding-bottom: 3mm;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .phase2-card-icon {
+            width: 10mm;
+            height: 10mm;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14pt;
+        }
+
+        .phase2-card-icon.blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .phase2-card-icon.purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .phase2-card-icon.green { background: linear-gradient(135deg, #10b981, #059669); }
+        .phase2-card-icon.pink { background: linear-gradient(135deg, #ec4899, #db2777); }
+
+        .phase2-card-title {
+            font-size: 11pt;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .phase2-card-list {
+            list-style: none;
+            font-size: 9pt;
+        }
+
+        .phase2-card-list li {
+            padding: 2mm 0;
+            color: #64748b;
+            display: flex;
+            align-items: flex-start;
+            gap: 2mm;
+        }
+
+        .phase2-card-list li::before {
+            content: '•';
+            color: #6366f1;
+            font-weight: bold;
+        }
+
+        /* Complexity Table */
+        .complexity-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 6mm 0;
+            font-size: 9pt;
+        }
+
+        .complexity-table th,
+        .complexity-table td {
+            padding: 3mm 4mm;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .complexity-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #1a1a2e;
+            font-size: 8pt;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .complexity-table td {
+            color: #475569;
+        }
+
+        .complexity-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 1mm 3mm;
+            border-radius: 4px;
+            font-size: 8pt;
+            font-weight: 600;
+        }
+
+        .badge.high { background: #fee2e2; color: #dc2626; }
+        .badge.medium { background: #fef3c7; color: #d97706; }
+        .badge.low { background: #d1fae5; color: #059669; }
+
+        /* Quote Section */
+        .quote-box {
+            background: linear-gradient(135deg, #1a1a2e 0%, #2d2d44 100%);
+            border-radius: 12px;
+            padding: 8mm;
+            margin: 8mm 0;
+            color: white;
+        }
+
+        .quote-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 5mm;
+            margin-bottom: 5mm;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .quote-title {
+            font-size: 14pt;
+            font-weight: 600;
+        }
+
+        .quote-ref {
+            font-size: 9pt;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .quote-total {
+            text-align: center;
+            padding: 8mm 0;
+        }
+
+        .quote-total-label {
+            font-size: 9pt;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 2mm;
+        }
+
+        .quote-total-amount {
+            font-size: 32pt;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .quote-total-sub {
+            font-size: 10pt;
+            color: rgba(255,255,255,0.6);
+            margin-top: 2mm;
+        }
+
+        .quote-scope {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 5mm;
+            margin: 5mm 0;
+        }
+
+        .quote-scope-title {
+            font-size: 10pt;
+            font-weight: 600;
+            margin-bottom: 3mm;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .quote-scope-list {
+            list-style: none;
+            font-size: 9pt;
+        }
+
+        .quote-scope-list li {
+            padding: 2mm 0;
+            color: rgba(255,255,255,0.7);
+            display: flex;
+            align-items: center;
+            gap: 3mm;
+        }
+
+        .quote-scope-list li::before {
+            content: '✓';
+            color: #10b981;
+            font-weight: bold;
+        }
+
+        .quote-terms {
+            margin-top: 5mm;
+            padding-top: 5mm;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .quote-terms-title {
+            font-size: 10pt;
+            font-weight: 600;
+            margin-bottom: 3mm;
+        }
+
+        .quote-terms-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 4mm;
+        }
+
+        .quote-term {
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+            padding: 4mm;
+        }
+
+        .quote-term-label {
+            font-size: 8pt;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .quote-term-value {
+            font-size: 12pt;
+            font-weight: 600;
+            margin-top: 1mm;
+        }
+
+        .quote-term-value.highlight {
+            color: #fbbf24;
+        }
+
+        /* Timeline */
+        .timeline {
+            margin: 6mm 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 4mm;
+            margin-bottom: 4mm;
+        }
+
+        .timeline-marker {
+            width: 8mm;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .timeline-dot {
+            width: 4mm;
+            height: 4mm;
+            border-radius: 50%;
+            background: #6366f1;
+        }
+
+        .timeline-line {
+            flex: 1;
+            width: 1px;
+            background: #e2e8f0;
+            margin-top: 2mm;
+        }
+
+        .timeline-content {
+            flex: 1;
+            padding-bottom: 4mm;
+        }
+
+        .timeline-title {
+            font-size: 10pt;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .timeline-period {
+            font-size: 8pt;
+            color: #6366f1;
+            font-weight: 500;
+            margin-bottom: 2mm;
+        }
+
+        .timeline-desc {
+            font-size: 9pt;
+            color: #64748b;
+        }
+
+        /* Footer */
+        .page-footer {
+            position: absolute;
+            bottom: 15mm;
+            left: 25mm;
+            right: 25mm;
+            display: flex;
+            justify-content: space-between;
+            font-size: 8pt;
+            color: #94a3b8;
+            padding-top: 5mm;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        /* Notes */
+        .note-box {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            padding: 4mm 5mm;
+            margin: 5mm 0;
+            font-size: 9pt;
+        }
+
+        .note-box-title {
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 2mm;
+        }
+
+        .note-box p {
+            color: #a16207;
+            margin: 0;
+        }
+
+        /* Signature Section */
+        .signature-section {
+            margin-top: 15mm;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10mm;
+        }
+
+        .signature-box {
+            border-top: 2px solid #1a1a2e;
+            padding-top: 3mm;
+        }
+
+        .signature-label {
+            font-size: 8pt;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .signature-line {
+            height: 15mm;
+        }
+
+        .signature-name {
+            font-size: 10pt;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .signature-date {
+            font-size: 9pt;
+            color: #64748b;
+            margin-top: 2mm;
+        }
+
+        /* Stats Row */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4mm;
+            margin: 6mm 0;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #f8fafc, #fff);
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 4mm;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 18pt;
+            font-weight: 700;
+            color: #6366f1;
+        }
+
+        .stat-label {
+            font-size: 8pt;
+            color: #64748b;
+            margin-top: 1mm;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Page 1: Cover -->
+    <div class="page">
+        <div class="cover">
+            <div class="cover-header">
+                <div class="company-name">LINKED IMPACT (PTY) LTD</div>
+                <div class="company-subtitle">Software Development & Digital Solutions</div>
+            </div>
+
+            <div class="cover-main">
+                <div class="cover-label">Development Proposal</div>
+                <h1 class="cover-title">Scout Platform<br/>Phase 2 Development</h1>
+                <p class="cover-subtitle">System Analysis, Scope Definition & Project Quote</p>
+            </div>
+
+            <div class="cover-footer">
+                <div class="cover-meta">
+                    <strong>Prepared For</strong><br/>
+                    Scout Events<br/>
+                    Platform Development Team
+                </div>
+                <div class="cover-meta" style="text-align: right;">
+                    <strong>Document Reference</strong><br/>
+                    LI-SCOUT-2026-002<br/>
+                    February 2026
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 2: Executive Summary -->
+    <div class="page">
+        <div class="page-header">
+            <div class="page-header-left">Scout Platform - Phase 2 Proposal</div>
+            <div class="page-header-right">Linked Impact</div>
+        </div>
+
+        <h1>Executive Summary</h1>
+        <p class="lead">This document presents our comprehensive analysis of the Scout platform's current architecture (Phase 1) and outlines the development scope for Phase 2, which introduces Business Profiles, Artist/Performer Profiles, and Ticketed Events with integrated payment processing.</p>
+
+        <p>Following a thorough code review of the existing repositories (scout-app, scout-server, scout-server-init), we have mapped the complete system architecture and identified the integration points, database modifications, and new feature development required for Phase 2.</p>
+
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Repositories Analyzed</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">20+</div>
+                <div class="stat-label">Database Models</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">50+</div>
+                <div class="stat-label">API Endpoints</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">40+</div>
+                <div class="stat-label">App Screens</div>
+            </div>
+        </div>
+
+        <h2>Phase 1: System Architecture</h2>
+
+        <p>The Scout platform is a cross-platform event discovery and social networking application built with modern technologies and a scalable architecture.</p>
+
+        <div class="architecture-diagram">
+            <div class="arch-group">
+                <div class="arch-group-label">Client Applications (Flutter)</div>
+                <div class="arch-row">
+                    <div class="arch-box primary">
+                        <div class="arch-box-icon">🤖</div>
+                        <div class="arch-box-label">Android</div>
+                        <div class="arch-box-sub">Play Store</div>
+                    </div>
+                    <div class="arch-box primary">
+                        <div class="arch-box-icon">🍎</div>
+                        <div class="arch-box-label">iOS</div>
+                        <div class="arch-box-sub">App Store</div>
+                    </div>
+                    <div class="arch-box primary">
+                        <div class="arch-box-icon">🌐</div>
+                        <div class="arch-box-label">Web</div>
+                        <div class="arch-box-sub">Browser</div>
+                    </div>
+                    <div class="arch-box primary">
+                        <div class="arch-box-icon">💻</div>
+                        <div class="arch-box-label">Desktop</div>
+                        <div class="arch-box-sub">Win/Mac</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arch-connector">↓ HTTPS / WebSocket ↓</div>
+
+            <div class="arch-group">
+                <div class="arch-group-label">Backend Infrastructure</div>
+                <div class="arch-row">
+                    <div class="arch-box warning">
+                        <div class="arch-box-icon">☁️</div>
+                        <div class="arch-box-label">Cloudflare</div>
+                        <div class="arch-box-sub">CDN + SSL + DDoS</div>
+                    </div>
+                    <div class="arch-box warning">
+                        <div class="arch-box-icon">🚀</div>
+                        <div class="arch-box-label">Express.js</div>
+                        <div class="arch-box-sub">REST API :1000</div>
+                    </div>
+                    <div class="arch-box warning">
+                        <div class="arch-box-icon">⚡</div>
+                        <div class="arch-box-label">Socket.IO</div>
+                        <div class="arch-box-sub">Real-time :1001</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="arch-connector">↓</div>
+
+            <div class="arch-row">
+                <div class="arch-box success">
+                    <div class="arch-box-icon">🐘</div>
+                    <div class="arch-box-label">PostgreSQL</div>
+                    <div class="arch-box-sub">Supabase Hosted</div>
+                </div>
+                <div class="arch-box pink">
+                    <div class="arch-box-icon">🔥</div>
+                    <div class="arch-box-label">Firebase</div>
+                    <div class="arch-box-sub">Auth + FCM</div>
+                </div>
+                <div class="arch-box">
+                    <div class="arch-box-icon">📁</div>
+                    <div class="arch-box-label">Supabase</div>
+                    <div class="arch-box-sub">File Storage</div>
+                </div>
+                <div class="arch-box">
+                    <div class="arch-box-icon">🗺️</div>
+                    <div class="arch-box-label">Google</div>
+                    <div class="arch-box-sub">Maps API</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential - Linked Impact (Pty) Ltd</span>
+            <span>Page 2 of 8</span>
+        </div>
+    </div>
+
+    <!-- Page 3: Technology Stack Deep Dive -->
+    <div class="page">
+        <div class="page-header">
+            <div class="page-header-left">Scout Platform - Phase 2 Proposal</div>
+            <div class="page-header-right">Linked Impact</div>
+        </div>
+
+        <h1>Technology Stack</h1>
+        <p class="lead">A detailed breakdown of the technologies powering the Scout platform.</p>
+
+        <div class="feature-grid">
+            <div class="feature-block">
+                <h4>📱 Mobile Application</h4>
+                <ul>
+                    <li>Flutter SDK 3.9+ (Cross-platform)</li>
+                    <li>Dart programming language</li>
+                    <li>GetX state management & routing</li>
+                    <li>Hive for local database storage</li>
+                    <li>FlutterSecureStorage for tokens</li>
+                    <li>Google Maps integration</li>
+                    <li>Firebase Analytics & Crashlytics</li>
+                    <li>AppsFlyer for deep linking</li>
+                </ul>
+            </div>
+
+            <div class="feature-block">
+                <h4>🖥️ Backend Server</h4>
+                <ul>
+                    <li>Node.js 22.x runtime</li>
+                    <li>Express.js 4.21 framework</li>
+                    <li>TypeScript 5.6 for type safety</li>
+                    <li>Prisma 7.3 ORM</li>
+                    <li>Socket.IO 4.8 for real-time</li>
+                    <li>Zod for validation</li>
+                    <li>Pino for structured logging</li>
+                    <li>PM2 process management</li>
+                </ul>
+            </div>
+
+            <div class="feature-block">
+                <h4>🗄️ Database & Storage</h4>
+                <ul>
+                    <li>PostgreSQL 15+ (Supabase hosted)</li>
+                    <li>Connection pooling enabled</li>
+                    <li>Geo-indexed location queries</li>
+                    <li>Soft delete patterns</li>
+                    <li>Supabase file storage for media</li>
+                    <li>CDN for static assets</li>
+                </ul>
+            </div>
+
+            <div class="feature-block">
+                <h4>🔐 Security & Auth</h4>
+                <ul>
+                    <li>JWT access & refresh tokens</li>
+                    <li>Firebase Authentication</li>
+                    <li>Google OAuth 2.0</li>
+                    <li>bcrypt password hashing</li>
+                    <li>OTP email verification</li>
+                    <li>Cloudflare SSL/TLS</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>Database Schema Overview</h2>
+        <p>The current database consists of 20+ interconnected models organized into logical domains:</p>
+
+        <div class="schema-grid">
+            <div class="schema-item">
+                <div class="schema-item-icon">👤</div>
+                <div class="schema-item-name">User</div>
+                <div class="schema-item-count">Core profile</div>
+            </div>
+            <div class="schema-item">
+                <div class="schema-item-icon">✅</div>
+                <div class="schema-item-name">Validation</div>
+                <div class="schema-item-count">OTP handling</div>
+            </div>
+            <div class="schema-item">
+                <div class="schema-item-icon">🎉</div>
+                <div class="schema-item-name">Event</div>
+                <div class="schema-item-count">Event data</div>
+            </div>
+            <div class="schema-item">
+                <div class="schema-item-icon">📍</div>
+                <div class="schema-item-name">Location</div>
+                <div class="schema-item-count">Geo data</div>
+            </div>
+            <div class="schema-item">
+                <div class="schema-item-icon">📂</div>
+                <div class="schema-item-name">Category</div>
+                <div class="schema-item-count">Event types</div>
+            </div>
+            <div class="schema-item">
+                <div class="schema-item-icon">🏷️</div>
+                <div class="schema-item-name">Tag</div>
+                <div class="schema-item-count">Tagging system</div>
+            </div>
+            <div class="schema-item">
+                <div class="schema-item-icon">👥</div>
+                <div class="schema-item-name">Follow</div>
+                <div class="schema-item-count">Social graph</div>
+            </div>
+            <div class="schema-item">
+                <div class="schema-item-icon">🔗</div>
+                <div class="schema-item-name">Connection</div>
+                <div class="schema-item-count">Friend requests</div>
+            </div>
+            <div class="schema-item">
+                <div class="schema-item-icon">💾</div>
+                <div class="schema-item-name">SavedEvent</div>
+                <div class="schema-item-count">Bookmarks</div>
+            </div>
+            <div class="schema-item">
+                <div class="schema-item-icon">❤️</div>
+                <div class="schema-item-name">InterestEvent</div>
+                <div class="schema-item-count">Interested users</div>
+            </div>
+            <div class="schema-item">
+                <div class="schema-item-icon">🔔</div>
+                <div class="schema-item-name">Notification</div>
+                <div class="schema-item-count">Push & in-app</div>
+            </div>
+            <div class="schema-item">
+                <div class="schema-item-icon">🚫</div>
+                <div class="schema-item-name">BlockUser</div>
+                <div class="schema-item-count">Blocked users</div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential - Linked Impact (Pty) Ltd</span>
+            <span>Page 3 of 8</span>
+        </div>
+    </div>
+
+    <!-- Page 4: Current API & Features -->
+    <div class="page">
+        <div class="page-header">
+            <div class="page-header-left">Scout Platform - Phase 2 Proposal</div>
+            <div class="page-header-right">Linked Impact</div>
+        </div>
+
+        <h1>Phase 1: API Structure</h1>
+        <p class="lead">The backend exposes a RESTful API at <strong>api.scoutevents.co.za/api/v1</strong> with the following module structure:</p>
+
+        <div class="api-section">
+            <h3>Authentication Module</h3>
+            <table class="api-table">
+                <thead>
+                    <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="method post">POST</td><td class="endpoint">/auth/sign-up</td><td>User registration with email verification</td></tr>
+                    <tr><td class="method post">POST</td><td class="endpoint">/auth/sign-in</td><td>User login with credentials</td></tr>
+                    <tr><td class="method post">POST</td><td class="endpoint">/auth/verify-account</td><td>OTP verification for new accounts</td></tr>
+                    <tr><td class="method post">POST</td><td class="endpoint">/auth/forget-password</td><td>Initiate password reset flow</td></tr>
+                    <tr><td class="method post">POST</td><td class="endpoint">/auth/reset-password</td><td>Complete password reset with OTP</td></tr>
+                    <tr><td class="method post">POST</td><td class="endpoint">/social/verify</td><td>Google OAuth token verification</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="api-section">
+            <h3>User Module</h3>
+            <table class="api-table">
+                <thead>
+                    <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="method get">GET</td><td class="endpoint">/user/profile</td><td>Get authenticated user's profile</td></tr>
+                    <tr><td class="method patch">PATCH</td><td class="endpoint">/user/profile</td><td>Update profile information</td></tr>
+                    <tr><td class="method get">GET</td><td class="endpoint">/user/:userId</td><td>Get public profile of another user</td></tr>
+                    <tr><td class="method get">GET</td><td class="endpoint">/user/nearby-users</td><td>Get users near current location</td></tr>
+                    <tr><td class="method post">POST</td><td class="endpoint">/user/block/:userId</td><td>Block a user</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="api-section">
+            <h3>Event Module</h3>
+            <table class="api-table">
+                <thead>
+                    <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="method post">POST</td><td class="endpoint">/event/create</td><td>Create a new event</td></tr>
+                    <tr><td class="method get">GET</td><td class="endpoint">/event/for-you</td><td>Personalized event feed</td></tr>
+                    <tr><td class="method get">GET</td><td class="endpoint">/event/friends-events</td><td>Events from followed users</td></tr>
+                    <tr><td class="method get">GET</td><td class="endpoint">/event/today</td><td>Events happening today</td></tr>
+                    <tr><td class="method get">GET</td><td class="endpoint">/event/nearby-events</td><td>Location-based event search</td></tr>
+                    <tr><td class="method get">GET</td><td class="endpoint">/event/:eventId</td><td>Get event details</td></tr>
+                    <tr><td class="method post">POST</td><td class="endpoint">/event/add-interest/:id</td><td>Mark interest in event</td></tr>
+                    <tr><td class="method delete">DELETE</td><td class="endpoint">/event/:eventId</td><td>Delete an event</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="api-section">
+            <h3>Social Module</h3>
+            <table class="api-table">
+                <thead>
+                    <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="method post">POST</td><td class="endpoint">/connection/follow-user/:id</td><td>Follow a user</td></tr>
+                    <tr><td class="method post">POST</td><td class="endpoint">/connection/send-request/:id</td><td>Send connection request</td></tr>
+                    <tr><td class="method post">POST</td><td class="endpoint">/connection/accept/:id</td><td>Accept connection request</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential - Linked Impact (Pty) Ltd</span>
+            <span>Page 4 of 8</span>
+        </div>
+    </div>
+
+    <!-- Page 5: Current Features Detail -->
+    <div class="page">
+        <div class="page-header">
+            <div class="page-header-left">Scout Platform - Phase 2 Proposal</div>
+            <div class="page-header-right">Linked Impact</div>
+        </div>
+
+        <h1>Phase 1: Feature Summary</h1>
+        <p class="lead">A comprehensive overview of all implemented functionality in the current production system.</p>
+
+        <div class="feature-grid">
+            <div class="feature-block">
+                <h4>🔐 Authentication & Security</h4>
+                <ul>
+                    <li>Email/password registration</li>
+                    <li>6-digit OTP email verification</li>
+                    <li>Google OAuth social login</li>
+                    <li>JWT token-based sessions</li>
+                    <li>Automatic token refresh</li>
+                    <li>Secure password reset flow</li>
+                    <li>Account deletion request</li>
+                </ul>
+            </div>
+
+            <div class="feature-block">
+                <h4>👤 User Profiles</h4>
+                <ul>
+                    <li>Profile photo upload</li>
+                    <li>Bio and personal details</li>
+                    <li>Social media links</li>
+                    <li>Location settings</li>
+                    <li>Privacy controls (public/private)</li>
+                    <li>Notification preferences</li>
+                    <li>Interest selection</li>
+                </ul>
+            </div>
+
+            <div class="feature-block">
+                <h4>🎉 Event Management</h4>
+                <ul>
+                    <li>Multi-step event creation</li>
+                    <li>Category & tag assignment</li>
+                    <li>Location with map integration</li>
+                    <li>Date, time & duration</li>
+                    <li>Age restrictions</li>
+                    <li>Event activities/schedule</li>
+                    <li>Visibility controls</li>
+                    <li>Event sharing (AppsFlyer)</li>
+                </ul>
+            </div>
+
+            <div class="feature-block">
+                <h4>🔍 Discovery Features</h4>
+                <ul>
+                    <li>"For You" personalized feed</li>
+                    <li>"Friends" social feed</li>
+                    <li>"Today" time-based feed</li>
+                    <li>Nearby events (GPS)</li>
+                    <li>Category browsing</li>
+                    <li>Search with filters</li>
+                    <li>Date range filtering</li>
+                </ul>
+            </div>
+
+            <div class="feature-block">
+                <h4>👥 Social Features</h4>
+                <ul>
+                    <li>Follow/unfollow users</li>
+                    <li>Connection requests</li>
+                    <li>Accept/reject requests</li>
+                    <li>Block/unblock users</li>
+                    <li>Public profile viewing</li>
+                    <li>Follower/following counts</li>
+                    <li>User search</li>
+                </ul>
+            </div>
+
+            <div class="feature-block">
+                <h4>🔔 Notifications</h4>
+                <ul>
+                    <li>Push notifications (FCM)</li>
+                    <li>In-app notification center</li>
+                    <li>New follower alerts</li>
+                    <li>Event reminders</li>
+                    <li>Connection requests</li>
+                    <li>Notification preferences</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>Real-time Features (Socket.IO)</h2>
+        <p>The platform includes WebSocket infrastructure for real-time functionality:</p>
+        <ul class="feature-list">
+            <li>Online user presence tracking</li>
+            <li>Active users list with live updates</li>
+            <li>JWT-authenticated socket connections</li>
+            <li>Room-based messaging infrastructure (scaffolded for Phase 2)</li>
+        </ul>
+
+        <div class="note-box">
+            <div class="note-box-title">Observation: Chat System Ready</div>
+            <p>The codebase contains commented-out chat functionality, indicating the infrastructure for direct messaging is already scaffolded and can be activated in future phases.</p>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential - Linked Impact (Pty) Ltd</span>
+            <span>Page 5 of 8</span>
+        </div>
+    </div>
+
+    <!-- Page 6: Phase 2 Scope -->
+    <div class="page">
+        <div class="page-header">
+            <div class="page-header-left">Scout Platform - Phase 2 Proposal</div>
+            <div class="page-header-right">Linked Impact</div>
+        </div>
+
+        <h1>Phase 2: Development Scope</h1>
+        <p class="lead">Phase 2 introduces three major feature sets that significantly expand the platform's capabilities: Business Profiles, Artist/Performer Profiles, and Ticketed Events with payment processing.</p>
+
+        <div class="phase2-grid">
+            <div class="phase2-card">
+                <div class="phase2-card-header">
+                    <div class="phase2-card-icon blue">🏢</div>
+                    <div class="phase2-card-title">Business Profiles</div>
+                </div>
+                <ul class="phase2-card-list">
+                    <li>New profile type with business-specific fields</li>
+                    <li>Business verification workflow</li>
+                    <li>Business analytics dashboard</li>
+                    <li>Multiple team member access</li>
+                    <li>Business hours & contact information</li>
+                    <li>Service/menu listings</li>
+                    <li>Customer review system</li>
+                    <li>Business-to-event linking</li>
+                </ul>
+            </div>
+
+            <div class="phase2-card">
+                <div class="phase2-card-header">
+                    <div class="phase2-card-icon purple">🎤</div>
+                    <div class="phase2-card-title">Artist/Performer Profiles</div>
+                </div>
+                <ul class="phase2-card-list">
+                    <li>Artist profile type with portfolio</li>
+                    <li>Performance history & upcoming shows</li>
+                    <li>Media gallery (photos, videos, audio)</li>
+                    <li>Genre/category tagging</li>
+                    <li>Booking request system</li>
+                    <li>Fan following & notifications</li>
+                    <li>Artist verification badges</li>
+                    <li>Social media integration</li>
+                </ul>
+            </div>
+
+            <div class="phase2-card">
+                <div class="phase2-card-header">
+                    <div class="phase2-card-icon green">🎫</div>
+                    <div class="phase2-card-title">Ticketed Events</div>
+                </div>
+                <ul class="phase2-card-list">
+                    <li>Ticket type configuration (GA, VIP, Early Bird)</li>
+                    <li>Dynamic pricing & capacity management</li>
+                    <li>Payment gateway integration</li>
+                    <li>QR code ticket generation</li>
+                    <li>Ticket scanning & validation</li>
+                    <li>Refund processing workflow</li>
+                    <li>Sales analytics & reporting</li>
+                    <li>Attendee management</li>
+                </ul>
+            </div>
+
+            <div class="phase2-card">
+                <div class="phase2-card-header">
+                    <div class="phase2-card-icon pink">💳</div>
+                    <div class="phase2-card-title">Payment System</div>
+                </div>
+                <ul class="phase2-card-list">
+                    <li>Payment gateway integration (Stripe/PayFast)</li>
+                    <li>Secure card tokenization</li>
+                    <li>Transaction history</li>
+                    <li>Payout management for organizers</li>
+                    <li>Fee calculation & invoicing</li>
+                    <li>Multi-currency support</li>
+                    <li>Payment webhooks & reconciliation</li>
+                    <li>Financial reporting</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Technical Complexity Analysis</h3>
+        <table class="complexity-table">
+            <thead>
+                <tr>
+                    <th>Component</th>
+                    <th>Database Changes</th>
+                    <th>API Endpoints</th>
+                    <th>UI Screens</th>
+                    <th>Complexity</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Business Profiles</td>
+                    <td>8+ new models</td>
+                    <td>15+ endpoints</td>
+                    <td>12+ screens</td>
+                    <td><span class="badge high">High</span></td>
+                </tr>
+                <tr>
+                    <td>Artist Profiles</td>
+                    <td>6+ new models</td>
+                    <td>12+ endpoints</td>
+                    <td>10+ screens</td>
+                    <td><span class="badge high">High</span></td>
+                </tr>
+                <tr>
+                    <td>Ticketed Events</td>
+                    <td>10+ new models</td>
+                    <td>20+ endpoints</td>
+                    <td>15+ screens</td>
+                    <td><span class="badge high">High</span></td>
+                </tr>
+                <tr>
+                    <td>Payment Integration</td>
+                    <td>5+ new models</td>
+                    <td>10+ endpoints</td>
+                    <td>8+ screens</td>
+                    <td><span class="badge high">High</span></td>
+                </tr>
+                <tr>
+                    <td>Profile Type Switching</td>
+                    <td>Schema migration</td>
+                    <td>5+ endpoints</td>
+                    <td>5+ screens</td>
+                    <td><span class="badge medium">Medium</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="page-footer">
+            <span>Confidential - Linked Impact (Pty) Ltd</span>
+            <span>Page 6 of 8</span>
+        </div>
+    </div>
+
+    <!-- Page 7: Timeline & Deliverables -->
+    <div class="page">
+        <div class="page-header">
+            <div class="page-header-left">Scout Platform - Phase 2 Proposal</div>
+            <div class="page-header-right">Linked Impact</div>
+        </div>
+
+        <h1>Development Timeline</h1>
+        <p class="lead">The Phase 2 development is structured across a 12-week (3-month) delivery schedule with clear milestones and deliverables.</p>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-marker">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-line"></div>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-period">Weeks 1-2</div>
+                    <div class="timeline-title">Architecture & Database Design</div>
+                    <div class="timeline-desc">Schema design for new profile types and ticketing system. API specification documentation. Payment gateway selection and integration planning. Development environment setup.</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-marker">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-line"></div>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-period">Weeks 3-5</div>
+                    <div class="timeline-title">Business & Artist Profile Development</div>
+                    <div class="timeline-desc">Database migrations and model implementation. Backend API development for both profile types. Profile creation and management UI. Verification workflow implementation.</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-marker">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-line"></div>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-period">Weeks 6-8</div>
+                    <div class="timeline-title">Ticketing System Development</div>
+                    <div class="timeline-desc">Ticket type configuration system. Event ticketing UI and management dashboard. QR code generation and scanning functionality. Capacity management and availability tracking.</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-marker">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-line"></div>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-period">Weeks 9-10</div>
+                    <div class="timeline-title">Payment Integration</div>
+                    <div class="timeline-desc">Payment gateway integration and testing. Checkout flow implementation. Transaction management and history. Payout system for event organizers. Financial reporting dashboard.</div>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-marker">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-line"></div>
+                </div>
+                <div class="timeline-content">
+                    <div class="timeline-period">Weeks 11-12</div>
+                    <div class="timeline-title">Testing, QA & Deployment</div>
+                    <div class="timeline-desc">Comprehensive testing across all platforms. Payment flow testing with sandbox environments. Performance optimization. Production deployment and monitoring setup. Documentation and handover.</div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Key Deliverables</h2>
+        <ul class="feature-list">
+            <li>Extended database schema with migrations for seamless upgrade</li>
+            <li>Business profile module (backend + mobile app)</li>
+            <li>Artist/Performer profile module (backend + mobile app)</li>
+            <li>Complete ticketing system with QR validation</li>
+            <li>Integrated payment processing with organizer payouts</li>
+            <li>Updated API documentation</li>
+            <li>Testing coverage for all new features</li>
+            <li>Deployment to production environment</li>
+        </ul>
+
+        <div class="page-footer">
+            <span>Confidential - Linked Impact (Pty) Ltd</span>
+            <span>Page 7 of 8</span>
+        </div>
+    </div>
+
+    <!-- Page 8: Quote & Terms -->
+    <div class="page">
+        <div class="page-header">
+            <div class="page-header-left">Scout Platform - Phase 2 Proposal</div>
+            <div class="page-header-right">Linked Impact</div>
+        </div>
+
+        <h1>Project Investment</h1>
+        <p class="lead">The following quote represents the complete Phase 2 development scope as a single, integrated project deliverable.</p>
+
+        <div class="quote-box">
+            <div class="quote-header">
+                <div class="quote-title">Development Quote</div>
+                <div class="quote-ref">REF: LI-SCOUT-2026-002</div>
+            </div>
+
+            <div class="quote-total">
+                <div class="quote-total-label">Total Project Investment</div>
+                <div class="quote-total-amount">R125,000</div>
+                <div class="quote-total-sub">Excl. VAT | 12-Week Delivery</div>
+            </div>
+
+            <div class="quote-scope">
+                <div class="quote-scope-title">Complete Scope Includes:</div>
+                <ul class="quote-scope-list">
+                    <li>Business Profile System (creation, verification, dashboard, analytics)</li>
+                    <li>Artist/Performer Profile System (portfolio, booking, media gallery)</li>
+                    <li>Ticketed Events Module (ticket types, capacity, QR codes, scanning)</li>
+                    <li>Payment Gateway Integration (checkout, transactions, payouts, reporting)</li>
+                    <li>Database Architecture Extension & Migrations</li>
+                    <li>Backend API Development (60+ new endpoints)</li>
+                    <li>Mobile App Development (45+ new screens across platforms)</li>
+                    <li>Testing, QA & Production Deployment</li>
+                </ul>
+            </div>
+
+            <div class="quote-terms">
+                <div class="quote-terms-title">Payment Terms</div>
+                <div class="quote-terms-grid">
+                    <div class="quote-term">
+                        <div class="quote-term-label">Deposit Required</div>
+                        <div class="quote-term-value highlight">80% (R100,000)</div>
+                    </div>
+                    <div class="quote-term">
+                        <div class="quote-term-label">On Completion</div>
+                        <div class="quote-term-value">20% (R25,000)</div>
+                    </div>
+                    <div class="quote-term">
+                        <div class="quote-term-label">Project Duration</div>
+                        <div class="quote-term-value">12 Weeks</div>
+                    </div>
+                    <div class="quote-term">
+                        <div class="quote-term-label">Quote Valid Until</div>
+                        <div class="quote-term-value">14 Days</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="note-box">
+            <div class="note-box-title">Important Note</div>
+            <p>This quote represents Phase 2 as a complete, integrated system. The features are architecturally interdependent — Business and Artist profiles require the profile type infrastructure, ticketing requires payment integration, and all components share common authentication and notification systems. Partial implementation is not available as it would compromise system integrity.</p>
+        </div>
+
+        <h2>Acceptance</h2>
+        <p>By signing below, you confirm acceptance of this proposal and the terms outlined herein. Development will commence upon receipt of the 80% deposit.</p>
+
+        <div class="signature-section">
+            <div class="signature-box">
+                <div class="signature-label">For Scout Events</div>
+                <div class="signature-line"></div>
+                <div class="signature-name">Authorized Signatory</div>
+                <div class="signature-date">Date: _________________</div>
+            </div>
+            <div class="signature-box">
+                <div class="signature-label">For Linked Impact (Pty) Ltd</div>
+                <div class="signature-line"></div>
+                <div class="signature-name">Authorized Signatory</div>
+                <div class="signature-date">Date: _________________</div>
+            </div>
+        </div>
+
+        <div class="page-footer">
+            <span>Confidential - Linked Impact (Pty) Ltd</span>
+            <span>Page 8 of 8</span>
+        </div>
+    </div>
+
+</body>
+</html>
